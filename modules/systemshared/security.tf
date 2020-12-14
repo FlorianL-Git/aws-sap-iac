@@ -8,10 +8,12 @@ resource "aws_security_group" "sec_group_efs" {
   description = "security group for ${var.sap_sid} EFS storage"
   vpc_id      = var.vpc_id
 
-  tags = {
-    Name    = "security group for ${var.sap_sid} EFS storage"
-    sap_sid = var.sap_sid
-  }
+  tags = merge(
+    local.common_tags,
+    {
+      Name                = "security group for ${var.sap_sid} EFS storage"
+    }
+  )
 
   #Needed because on changes terraform tries to delete the sg befor changing the EC2 instance which doesn'work because there are dependant objects
   lifecycle {
