@@ -118,7 +118,7 @@ resource "aws_security_group_rule" "allow_out" {
 
 resource "aws_key_pair" "ssh" {
   key_name   = "${var.hostname} - SSH Key"
-  public_key = var.ssh_key
+  public_key = var.ssh_public_key
 
   tags = merge(
     local.common_tags,
