@@ -33,6 +33,13 @@ resource "aws_ec2_tag" "root_block_name" {
   value       = "${lower(var.sap_sid)}_${var.hostname}_root"
 }
 
+resource "aws_ec2_tag" "root_block_tags" {
+  for_each = local.common_tags
+  resource_id = aws_instance.instance.root_block_device.0.volume_id
+  key         = each.key
+  value       = each.value
+}
+
 resource "aws_network_interface" "eth0" {
   subnet_id       = var.subnet_id
   security_groups = [ aws_security_group.sec_group_instance.id ]
