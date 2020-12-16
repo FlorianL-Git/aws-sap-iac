@@ -111,11 +111,9 @@ variable "kms_key_id" {
 variable "filesystem_backup_plan" {
   type        = string
   description = "Role for the EC2 IAM Instance Profile."
-  default     = null
 }
 
 variable "backup_role" {
   type        = string
   description = "IAM Role for AWS Backup."
-  default     = null
 }

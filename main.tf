@@ -37,14 +37,14 @@ module "hdb" {
     instance_type = "r5.8xlarge"
     hostname      = "tfhdhdb01"
     ssh_public_key       = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDjZD5PNfn/LDreoxfMcVEPxu13w9/Wbx/tvI/73NwKum1fIOZTtFmzsESsJ9JPP9xOCxjpRy5PSQwU/lmRsEOkPgSAORdTaggcdlgEI8o4JP+K+IZubaHb8VZDqyjy9Ul9wrmVC83jgMcUlg6zH3bAIlltX6KS0rDLCNa9IVBS5Ms9XYtzp60aqiHPVGrMvyjxxTIMdvjAET3F8EEpnnYyzTrOZVms5mE0EkusscLCG+HP3GeIJVC7c0KEMKEHH/a4usXIp+0WpInfZzb2Nu9I60VMkLa9v/VnqB2UBLDSXTcliiwMkg2jXtDfR9dqN4DCpR0LqY7ztMHuJGvJuuyf florian@DESKTOP-2BBPJ6Q"
-    
-    #instance_role = module.systemshared.iam_instance_role_id
+    filesystem_backup_plan = module.systemshared.backup_plan_filesystems
+    backup_role =   module.systemshared.iam_backup_role_id
+    #instance_role = module.systemshared.iam_hanadb_role_id
 }
 
-/*
+
 module "systemshared" {
     source = "./modules/systemshared"  
     sap_sid = local.sap_sid
     vpc_id =  local.vpc_id
 }
-*/
