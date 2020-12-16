@@ -52,6 +52,7 @@ variable "swap_size" {
   default        = 32
 }
 
+#Security Setting
 variable "instance_role" {
   type        = string
   description = "Role for the EC2 IAM Instance Profile."
