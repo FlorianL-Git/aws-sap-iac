@@ -1,19 +1,10 @@
-variable "hana_data_device_names" {
-  type =  list(string)
-  default = ["/dev/sdi", "/dev/sdj", "/dev/sdk", "/dev/sdl", "/dev/sdm", "/dev/sdn"]
-  description = "Fixed device list for /hana/data volume which is currently up to 6 devices"
-}
-
-variable "hana_log_device_names" {
-  type =  list(string)
-  default = ["/dev/sdo", "/dev/sdp"]
-  description = "Fixed device list for /hana/log volume which is currently up to 2 devices"
-}
-
-variable "hana_shared" {
-  type        = map
-  description = "Represents the default disk configuration for /hana/shared filesystem based on the AWS storage configuration. See https://docs.aws.amazon.com/quickstart/latest/sap-hana/storage.html"
-  default = {
+locals {
+  #type list(string)
+  hana_data_device_names = ["/dev/sdi", "/dev/sdj", "/dev/sdk", "/dev/sdl", "/dev/sdm", "/dev/sdn"]
+  #type list(string)
+  hana_log_device_names  = ["/dev/sdo", "/dev/sdp"]
+  #type map
+  hana_shared = {
     "u-24tb1.metal" = 1024
     "u-18tb1.metal" = 1024
     "u-12tb1.metal" = 1024
@@ -40,12 +31,8 @@ variable "hana_shared" {
     "r4.2xlarge" = 300
     "r3.2xlarge" = 300
   }
-}
-
-variable "hana_data" {
-  type        = map(map(object({ amount = number, disk_size = number })))
-  description = "Represents the default disk configuration for /hana/data filesystem based on the AWS storage configuration. See https://docs.aws.amazon.com/quickstart/latest/sap-hana/storage.html"
-  default = {
+  #type map(map(object({ amount = number, disk_size = number })))
+  hana_data = {
     "u-24tb1.metal" = {
       "gp2" = {
         amount   = 6,
@@ -297,14 +284,8 @@ variable "hana_data" {
       }
     }
   }
-}
-
-
-
-variable "hana_log" {
-  type        = map(map(object({ amount = number, disk_size = number })))
-  description = "Represents the default disk configuration for /hana/log filesystem based on the gp2 storage type. See https://docs.aws.amazon.com/quickstart/latest/sap-hana/storage.html"
-  default = {
+  #type map(map(object({ amount = number, disk_size = number })))
+  hana_log  = {
     "u-24tb1.metal" = {
       "gp2" = {
         amount   = 2,
