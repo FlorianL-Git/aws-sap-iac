@@ -35,7 +35,7 @@ resource "aws_ec2_tag" "root_block_name" {
 
 resource "aws_ec2_tag" "root_block_tags" {
   for_each = local.common_tags
-  resource_id = aws_instance.instance.root_block_device.0.volume_id
+  resource_id = aws_instance.sap_instance.root_block_device.0.volume_id
   key         = each.key
   value       = each.value
 }
