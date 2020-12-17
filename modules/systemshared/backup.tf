@@ -50,15 +50,10 @@ resource "aws_s3_bucket" "hana_backint" {
   )
 }
 
-/*
-resource "aws_backup_selection" "complete" {
+resource "aws_backup_selection" "efs" {
   iam_role_arn = aws_iam_role.backup.arn
-  name         = "tf_example_backup_selection"
-  plan_id      = aws_backup_plan.daily.id
+  name         = "${var.sap_sid}_efs_backup"
+  plan_id      = aws_backup_plan.filesystems.id
 
-  selection_tag {
-    type  = "STRINGEQUALS"
-    key   = "sap_sid"
-    value = var.sap_sid
-  }
-}*/
+  resources = [ aws_efs_file_system.system.id ]
+}
