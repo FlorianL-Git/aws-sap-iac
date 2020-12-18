@@ -3,5 +3,5 @@ resource "aws_backup_selection" "complete" {
   name         = "${var.hostname}_backup_selection"
   plan_id      = var.filesystem_backup_plan
 
-  resources = [ aws_ebs_volume.usrsap.id ]
+  resources = [ aws_ebs_volume.usrsap.arn ]
 }

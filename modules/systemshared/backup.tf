@@ -55,5 +55,5 @@ resource "aws_backup_selection" "efs" {
   name         = "${var.sap_sid}_efs_backup"
   plan_id      = aws_backup_plan.filesystems.id
 
-  resources = [ aws_efs_file_system.system.id ]
+  resources = [ aws_efs_file_system.system.arn ]
 }
