@@ -1,0 +1,11 @@
+[ascs]
+${ascs-hostname} ansible_host=${ascs-ip}
+
+
+[appserver]
+%{ for index, appserver-hostname in appserver-hostnames ~}
+${appserver-hostname} ansible_host=${appserver-ips[index]}
+%{ endfor ~}
+
+[hana_singlenode]
+${hdb-hostname} ansible_host=${hdb-ip}
