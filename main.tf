@@ -1,8 +1,3 @@
-provider "aws" {
-  profile = "myprofile"
-  region  = "eu-central-1"
-}
-
 locals {
     sap_sid = "FHC"
     vpc_id  = "vpc-009cbc51f7bb28df1"
@@ -21,7 +16,10 @@ locals {
     hdb_hostname           =   "tfhchdb20"
     hdb_instance_type      =   "r5.8xlarge"
     ssh_public_key          =   "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDjZD5PNfn/LDreoxfMcVEPxu13w9/Wbx/tvI/73NwKum1fIOZTtFmzsESsJ9JPP9xOCxjpRy5PSQwU/lmRsEOkPgSAORdTaggcdlgEI8o4JP+K+IZubaHb8VZDqyjy9Ul9wrmVC83jgMcUlg6zH3bAIlltX6KS0rDLCNa9IVBS5Ms9XYtzp60aqiHPVGrMvyjxxTIMdvjAET3F8EEpnnYyzTrOZVms5mE0EkusscLCG+HP3GeIJVC7c0KEMKEHH/a4usXIp+0WpInfZzb2Nu9I60VMkLa9v/VnqB2UBLDSXTcliiwMkg2jXtDfR9dqN4DCpR0LqY7ztMHuJGvJuuyf florian@DESKTOP-2BBPJ6Q"
+}
 
+provider "aws" {
+  region = "eu-central-1"
 }
 
 data "aws_subnet_ids" "subnets" {

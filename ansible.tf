@@ -1,6 +1,6 @@
 # Ansible inventory
 resource "local_file" "AnsibleInventory" {
-    content = templatefile("inventory.tmpl",
+    content = templatefile("./inventory.tmpl",
     {
         ascs-hostname = module.ascs.fqdn,
         ascs-ip = module.ascs.ip_address,
