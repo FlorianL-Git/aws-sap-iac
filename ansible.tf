@@ -10,5 +10,5 @@ resource "local_file" "AnsibleInventory" {
         hdb-ip = module.hdb.ip_address
     }
     )
-    filename = "inventory"
+    filename = "${path.module}/ansible/inventory/inventory.ini"
 }
