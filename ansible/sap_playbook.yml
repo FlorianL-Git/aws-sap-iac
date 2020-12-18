@@ -1,0 +1,15 @@
+---
+- hosts: ascs
+  roles:
+    - common
+    - ascs
+
+- hosts: appserver
+  roles:
+    - common
+    - appserver
+
+- hosts: hana_singlenode
+  roles:
+    - common
+    - hana_singlenode
