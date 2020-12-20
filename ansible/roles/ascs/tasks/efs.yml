@@ -1,0 +1,33 @@
+- name: Get System-EFS
+  shell: "aws efs describe-file-systems --region={{ placement.region }} --creation-token=system_FHC --query \"FileSystems[0].FileSystemId\" --output=text"
+  register: system_efs
+  changed_when: false
+
+- name: Get System-EFS Access Points
+  shell: "aws efs describe-access-points --region={{ placement.region }} --file-system-id={{ system_efs.stdout }}"
+  register: efs_access_points
+  changed_when: false
+
+- name: Set Access Points Variable
+  set_fact:
+    access_points: "{{ efs_access_points.stdout }}"
+
+- name: Create /sapmnt directory
+  file:
+    path: /sapmnt
+    state: directory
+    mode: '0755'
+
+- name: Create /usr/sap/trans directory
+  file:
+    path: /usr/sap/trans
+    state: directory
+    mode: '0755'
+
+- name: Mount an NFS volume
+  mount:
+    src: "{{ system_efs.stdout }}:/"
+    path: /sapmnt
+    opts: "tls,accesspoint={{ access_points | json_query('AccessPoints[?Name==''sapmnt_FHC'''+tags['sap-sid']+'].AccessPointId') }}"
+    state: mounted
+    fstype: nfs
