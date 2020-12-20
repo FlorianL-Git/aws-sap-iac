@@ -1,0 +1,34 @@
+- name: Get /usr/sap Block Devices
+  shell: "aws ec2 describe-volumes --region={{ placement.region }} --filters Name=attachment.instance-id,Values={{ instance_id }} Name=tag:filesystem,Values=usr_sap"
+  register: volumes_usr_sap
+  changed_when: false
+
+- name: Set /usr/sap Block Device Variable
+  set_fact:
+    ebs_usr_sap: "{{ volumes_usr_sap.stdout }}"
+
+- name: Get /usr/sap Device
+  shell: "nvme list | awk '/{{ ebs_usr_sap.Volumes[0].VolumeId | regex_replace(\"-\") }}/ {print $1}'"
+  register: device_usr_sap
+  changed_when: false
+  
+- name: Create a /usr/sap as xfs filesystem
+  filesystem:
+    fstype: xfs
+    dev: "{{ device_usr_sap.stdout }}"
+    opts: "-L USR_SAP"
+    resizefs: no
+
+- name: Create /usr/sap directory
+  file:
+    path: /usr/sap
+    state: directory
+    mode: '0755'
+
+
+- name: Mount File System
+  mount:
+    path: "/usr/sap"
+    src: "LABEL=USR_SAP"
+    fstype: xfs
+    state: mounted
