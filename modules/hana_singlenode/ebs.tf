@@ -8,7 +8,8 @@ resource "aws_ebs_volume" "usrsap" {
   tags = merge(
     local.common_tags,
     {
-      Name      = "${lower(var.sap_sid)}_${var.hostname}_usrsap"
+      Name      = "${lower(var.sap_sid)}_${var.hostname}_usrsap",
+      filesystem  = "usr_sap"
     }
   )
 }
@@ -29,7 +30,8 @@ resource "aws_ebs_volume" "swap" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${lower(var.sap_sid)}_${var.hostname}_swap"
+      Name = "${lower(var.sap_sid)}_${var.hostname}_swap",
+      filesystem  = "swap"
     }
   )
 }
@@ -51,7 +53,8 @@ resource "aws_ebs_volume" "hana_data" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${lower(var.sap_sid)}_${var.hostname}_hana_data${count.index+1}"
+      Name = "${lower(var.sap_sid)}_${var.hostname}_hana_data${count.index+1}",
+      filesystem  = "hana_data"
     }
   )
 }
@@ -74,7 +77,8 @@ resource "aws_ebs_volume" "hana_log" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${lower(var.sap_sid)}_${var.hostname}_hana_log${count.index+1}"
+      Name = "${lower(var.sap_sid)}_${var.hostname}_hana_log${count.index+1}",
+      filesystem  = "hana_log"
     }
   )
 }
@@ -96,7 +100,8 @@ resource "aws_ebs_volume" "hana_shared" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${lower(var.sap_sid)}_${var.hostname}_hana_shared"
+      Name = "${lower(var.sap_sid)}_${var.hostname}_hana_shared",
+      filesystem  = "hana_shared"
     }
   )
 }

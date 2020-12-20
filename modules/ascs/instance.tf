@@ -9,7 +9,7 @@ resource "aws_instance" "sap_instance" {
   tags = merge(
     local.common_tags,
     {
-      Name                = "${var.sap_sid} - ${var.hostname}"
+      Name                = var.hostname
     }
   )
 
