@@ -1,2 +1,2 @@
-- name: Example from an Ansible Playbook
-  ping:
+- include_tasks: ebs.yml
+- include_tasks: efs.yml
