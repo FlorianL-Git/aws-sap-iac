@@ -3,6 +3,9 @@ plugin: aws_ec2
 regions: 
   - eu-central-1
 
+filters:
+  tag-key: terraform-module
+
 strict: False
 keyed_groups:
   - key: tags
@@ -11,6 +14,8 @@ keyed_groups:
     prefix: aws_instance_type
   - key: placement.region
     prefix: aws_region
+  - key: tags.sap_sid
+    prefix: sap_sid
 hostnames:
   - ip-address
   - dns-name
