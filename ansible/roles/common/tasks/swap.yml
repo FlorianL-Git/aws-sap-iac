@@ -1,0 +1,31 @@
+- name: Get swap Block Devices
+  shell: "aws ec2 describe-volumes --region={{ placement.region }} --filters Name=attachment.instance-id,Values={{ instance_id }} Name=tag:filesystem,Values=swap"
+  register: volumes_swap
+  changed_when: false
+
+- name: Set swap Block Device Variable
+  set_fact:
+    ebs_swap: "{{ volumes_swap.stdout }}"
+
+- name: Get swap Device
+  shell: "nvme list | awk '/{{ ebs_swap.Volumes[0].VolumeId | regex_replace(\"-\") }}/ {print $1}'"
+  register: device_swap
+  changed_when: false
+  
+- name: Create a swap filesystem
+  filesystem:
+    fstype: swap
+    dev: "{{ device_swap.stdout }}"
+    opts: "-L SWAP"
+    resizefs: no
+
+- name: Add swap to /etc/fstab
+  mount:
+    path: "swap"
+    src: "LABEL=SWAP"
+    fstype: swap
+    state: present
+
+- name: Activate Swap
+  command: swapon -L SWAP
+  ignore_errors: yes
