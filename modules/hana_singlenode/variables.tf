@@ -43,7 +43,7 @@ variable "ssh_public_key" {
 variable "usrsap_size" {
   type        = number
   description = "Size of the /usr/sap filesystem."
-  default     = 15
+  default     = 50
 }
 
 variable "swap_size" {

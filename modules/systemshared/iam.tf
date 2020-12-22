@@ -108,6 +108,14 @@ resource "aws_iam_policy" "ansible" {
           "elasticfilesystem:DescribeFileSystems"
         ],
         "Resource": "*"
+      },
+      {
+        "Sid": "VisualEditor1",
+        "Effect": "Allow",
+        "Action": [
+          "kms:DescribeKey"
+        ],
+        "Resource": "${aws_kms_key.system.arn}"
       }
     ]
   }   
