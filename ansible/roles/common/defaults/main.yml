@@ -1,0 +1,6 @@
+zypper_packages:
+  - saptune
+  - nfs-utils
+  - nvme-cli
+  - ntp
+  - chrony
