@@ -21,6 +21,11 @@ resource "aws_security_group" "sec_group_efs" {
   }
 }
 
+resource "aws_kms_alias" "system_key_alias" {
+  name          = "alias/key_${var.sap_sid}"
+  target_key_id = aws_kms_key.system.key_id
+}
+
 resource "aws_security_group_rule" "nfs" {
   type              = "ingress"
   from_port         = 2049
