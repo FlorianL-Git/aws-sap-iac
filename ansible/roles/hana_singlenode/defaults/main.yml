@@ -1,0 +1,3 @@
+zypper_packages:
+  - libopenssl1_0_0
+  - libssh2-1

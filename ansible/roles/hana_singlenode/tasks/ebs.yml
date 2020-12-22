@@ -1,0 +1,70 @@
+- name: Get attached Block Devices
+  shell: "aws ec2 describe-volumes --region={{ placement.region }} --filters Name=attachment.instance-id,Values={{ instance_id }}"
+  register: volumes
+  changed_when: false
+
+
+# /usr/sap Filesystem
+- name: Set /usr/sap Block Device Variable
+  set_fact:
+    ebs_usr_sap: "{{ (volumes.stdout|from_json) | json_query(json_q) }}"
+  vars:
+    json_q: "Volumes[?Tags[?Key=='filesystem' && Value=='usr_sap']]"
+
+- name: Get /usr/sap Device
+  shell: "nvme list | awk '/{{ ebs_usr_sap[0].VolumeId | regex_replace(\"-\") }}/ {print $1}'"
+  register: device_usr_sap
+  changed_when: false
+  
+- name: Create a /usr/sap as xfs filesystem
+  filesystem:
+    fstype: xfs
+    dev: "{{ device_usr_sap.stdout }}"
+    opts: "-L USR_SAP"
+    resizefs: yes
+
+- name: Create /usr/sap directory
+  file:
+    path: /usr/sap
+    state: directory
+    mode: '0755'
+
+- name: Mount File System
+  mount:
+    path: "/usr/sap"
+    src: "UUID=cbfda197-e26b-47c0-af60-bfb2a51a88de"
+    fstype: xfs
+    state: mounted
+
+# /hana/shared Filesystem
+
+- name: Set /hana/shared Block Device Variable
+  set_fact:
+    ebs_hana_shared: "{{ (volumes.stdout|from_json) | json_query(json_q) }}"
+  vars:
+    json_q: "Volumes[?Tags[?Key=='filesystem' && Value=='hana_shared']]"
+
+- name: Get /hana/shared Device
+  shell: "nvme list | awk '/{{ ebs_hana_shared[0].VolumeId | regex_replace(\"-\") }}/ {print $1}'"
+  register: device_hana_shared
+  changed_when: false
+  
+- name: Create a /hana/shared as xfs filesystem
+  filesystem:
+    fstype: xfs
+    dev: "{{ device_hana_shared.stdout }}"
+    opts: "-L HANA_SHARED"
+    resizefs: no
+
+- name: Create /hana/shared directory
+  file:
+    path: /hana/shared
+    state: directory
+    mode: '0755'
+
+- name: Mount File System
+  mount:
+    path: "/hana/shared"
+    src: "LABEL=HANA_SHARED"
+    fstype: xfs
+    state: mounted
