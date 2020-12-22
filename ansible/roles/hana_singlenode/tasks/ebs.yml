@@ -4,6 +4,117 @@
   changed_when: false
 
 
+# /hana/data Filesystem
+
+- name: Set /hana/data Block Device Variable
+  set_fact:
+    ebs_hana_data: "{{ (volumes.stdout|from_json) | json_query(json_q) }}"
+  vars:
+    json_q: "Volumes[?Tags[?Key=='filesystem' && Value=='hana_data']]"
+
+
+
+- name: Get /hana/data Device
+  shell: "nvme list | awk '/{{ item.VolumeId | regex_replace(\"-\") }}/ {print $1}'"
+  register: devices_hana_data
+  changed_when: false
+  with_items: "{{ ebs_hana_data }}"
+  loop_control:
+    label: "{{ item.VolumeId }}"
+
+- name: Build /hana/data device List
+  set_fact:
+    device_list_hana_data: "{{ device_list_hana_data }} + [ '{{ item.stdout }}' ]"
+  with_items: "{{ devices_hana_data.results }}"
+  loop_control:
+    label: "{{ item.stdout }}"
+
+- name: Create /hana/data Volume Group
+  lvg:
+    vg: vghanadata
+    pvs: "{{ device_list_hana_data }}"
+
+- name: Create a logical volume for /hana/data
+  lvol:
+    vg: vghanadata
+    lv: lvhanadata
+    size: 100%PVS
+
+- name: Create a /hana/data as xfs filesystem
+  filesystem:
+    fstype: xfs
+    dev: "/dev/mapper/vghanadata-lvhanadata"
+    opts: "-L HANA_DATA"
+    resizefs: no
+
+- name: Create /hana/data directory
+  file:
+    path: /hana/data
+    state: directory
+    mode: '0755'
+
+- name: Mount File System
+  mount:
+    path: "/hana/data"
+    src: "LABEL=HANA_DATA"
+    fstype: xfs
+    state: mounted
+
+
+# /hana/log Filesystem
+
+- name: Set /hana/log Block Device Variable
+  set_fact:
+    ebs_hana_log: "{{ (volumes.stdout|from_json) | json_query(json_q) }}"
+  vars:
+    json_q: "Volumes[?Tags[?Key=='filesystem' && Value=='hana_log']]"
+
+- name: Get /hana/log Device
+  shell: "nvme list | awk '/{{ item.VolumeId | regex_replace(\"-\") }}/ {print $1}'"
+  register: devices_hana_log
+  changed_when: false
+  with_items: "{{ ebs_hana_log }}"
+  loop_control:
+    label: "{{ item.VolumeId }}"
+
+- name: Build /hana/log device List
+  set_fact:
+    device_list_hana_log: "{{ device_list_hana_log }} + [ '{{ item.stdout }}' ]"
+  with_items: "{{ devices_hana_log.results }}"
+  loop_control:
+    label: "{{ item.stdout }}"
+
+- name: Create /hana/log Volume Group
+  lvg:
+    vg: vghanalog
+    pvs: "{{ device_list_hana_log }}"
+
+- name: Create a logical volume for /hana/log
+  lvol:
+    vg: vghanalog
+    lv: lvhanalog
+    size: 100%PVS
+
+- name: Create a /hana/log as xfs filesystem
+  filesystem:
+    fstype: xfs
+    dev: "/dev/mapper/vghanalog-lvhanalog"
+    opts: "-L HANA_LOG"
+    resizefs: no
+
+- name: Create /hana/log directory
+  file:
+    path: /hana/log
+    state: directory
+    mode: '0755'
+
+- name: Mount File System
+  mount:
+    path: "/hana/log"
+    src: "LABEL=HANA_LOG"
+    fstype: xfs
+    state: mounted
+
 # /usr/sap Filesystem
 - name: Set /usr/sap Block Device Variable
   set_fact:
@@ -21,7 +132,7 @@
     fstype: xfs
     dev: "{{ device_usr_sap.stdout }}"
     opts: "-L USR_SAP"
-    resizefs: yes
+    resizefs: no
 
 - name: Create /usr/sap directory
   file:
@@ -32,7 +143,7 @@
 - name: Mount File System
   mount:
     path: "/usr/sap"
-    src: "UUID=cbfda197-e26b-47c0-af60-bfb2a51a88de"
+    src: "LABEL=USR_SAP"
     fstype: xfs
     state: mounted
 
@@ -68,3 +179,7 @@
     src: "LABEL=HANA_SHARED"
     fstype: xfs
     state: mounted
+
+
+
+
