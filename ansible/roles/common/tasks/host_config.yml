@@ -18,7 +18,14 @@
   lineinfile:
     dest: /etc/hosts
     regexp: '.*{{ item }}$'
-    line: "{{ hostvars[item].ansible_host }} {{item}}"
+    line: "{{ hostvars[item].ansible_host }} {{ hostvars[item].tags['fqdn'] }} {{item}}"
     state: present
   when: hostvars[item].ansible_host is defined
   with_items: "{{ groups['tag_sap_sid_' + tags['sap-sid'] ] }}"
+
+- name: Ensure Update DNS Search List
+  lineinfile:
+    path: /etc/sysconfig/network/config
+    regexp: '^NETCONFIG_DNS_STATIC_SEARCHLIST='
+    line: NETCONFIG_DNS_STATIC_SEARCHLIST="{{ tags.domain_name }}"
+  notify: "Update netconfig"
