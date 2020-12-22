@@ -1,4 +1,4 @@
-- include_tasks: ebs.yml
 - include_tasks: zypper.yml
+- include_tasks: ebs.yml
 - include_tasks: saptune.yml
 - include_tasks: backint.yml
