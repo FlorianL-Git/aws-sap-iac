@@ -1,0 +1,24 @@
+- name: Set Hostname
+  hostname:
+    name: "{{ tags.hostname }}"
+
+- name: Ensure DHCP does not change hostname
+  lineinfile:
+    path: /etc/sysconfig/network/dhcp
+    regexp: '^DHCLIENT_SET_HOSTNAME='
+    line: DHCLIENT_SET_HOSTNAME="no"
+
+- name: Ensure preserve_hostname is set
+  lineinfile:
+    path: /etc/cloud/cloud.cfg
+    regexp: '^preserve_hostname:'
+    line: "preserve_hostname: true"
+
+- name: Add IP address of all hosts to all hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '.*{{ item }}$'
+    line: "{{ hostvars[item].ansible_host }} {{item}}"
+    state: present
+  when: hostvars[item].ansible_host is defined
+  with_items: "{{ groups['tag_sap_sid_' + tags['sap-sid'] ] }}"
