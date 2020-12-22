@@ -1,15 +1,32 @@
 ---
-- hosts: ascs
+- hosts: all
+  strategy: free
+  remote_user: ec2-user
+  become: true
+  become_user: root
   roles:
     - common
+
+- hosts: tag_sap_instance_type_ascs
+  strategy: free
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  roles:
     - ascs
 
-- hosts: appserver
+- hosts: tag_sap_instance_type_appserver
+  strategy: free
+  remote_user: ec2-user
+  become: true
+  become_user: root
   roles:
-    - common
     - appserver
 
-- hosts: hana_singlenode
+- hosts: tag_sap_instance_type_hdb
+  strategy: free
+  remote_user: ec2-user
+  become: true
+  become_user: root
   roles:
-    - common
     - hana_singlenode
