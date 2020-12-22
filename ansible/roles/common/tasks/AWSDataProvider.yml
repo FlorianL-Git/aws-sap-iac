@@ -1,0 +1,15 @@
+- name: Download AWS DataProvider
+  get_url:
+    url: https://s3.amazonaws.com/aws-data-provider/bin/aws-agent_install.sh
+    dest: /tmp/aws-agent_install.sh
+  register: DataProvider
+
+- name: Change AWS DataProvider permissions
+  file:
+    path: /tmp/aws-agent_install.sh
+    mode: ugo+x
+  when: DataProvider.changed
+
+- name: Install AWS DataProvider
+  shell: /tmp/aws-agent_install.sh
+  when: DataProvider.changed
