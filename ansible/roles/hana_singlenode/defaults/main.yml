@@ -1,3 +1,5 @@
 zypper_packages:
   - libopenssl1_0_0
   - libssh2-1
+device_list_hana_data: []
+device_list_hana_log: []
