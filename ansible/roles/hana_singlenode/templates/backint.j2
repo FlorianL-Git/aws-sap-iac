@@ -1,0 +1,9 @@
+[DEFAULT]
+s3_bucket_name = {{ backint_bucket_name }}
+s3_bucket_owner_account_id = {{ backint_bucket_owner }}
+modify_global_ini = sql
+s3_bucket_region = {{ placement.region }}
+s3_sse_kms_arn = {{ backint_kms_key }}
+s3_bucket_folder = backup
+hana_sid = {{ tags['sap-sid'] }}
+installation_directory = /hana/shared/

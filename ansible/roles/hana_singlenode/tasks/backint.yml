@@ -1,0 +1,27 @@
+- name: Get AWS KMS Key
+  shell: "aws kms describe-key --key-id=alias/key_{{ tags['sap-sid']}} --region={{ placement.region }}"
+  register: kms_key
+  changed_when: false
+
+- name: Set ARN for Backint KMS Key
+  set_fact:
+    backint_kms_key: "{{ (kms_key.stdout|from_json).KeyMetadata.Arn }}"
+
+- name: Set Backint Bucket Name
+  set_fact:
+    backint_bucket_name: "{{ tags['sap-sid'] | lower }}-hana-backint"
+
+- name: Set Backint Bucket Owner
+  set_fact:
+    backint_bucket_owner: "{{ (kms_key.stdout|from_json).KeyMetadata.AWSAccountId }}"
+
+- name: Template a file to /tmp/backint.rsp
+  template:
+    src: backint.j2
+    dest: /tmp/backint.rsp
+
+- name: Download AWS Backint Agent
+  get_url:
+    url: https://s3.amazonaws.com/awssap-backint-agent/binary/latest/install-aws-backint-agent
+    dest: /tmp/install-aws-backint-agent
+  register: BackintAgent
