@@ -3,6 +3,10 @@
     name: "{{ zypper_packages }}"
     state: latest
 
+- zypper:
+    name: ntp
+    state: absent
+
 - name: Update all Zypper packages
   zypper:
     name: '*'

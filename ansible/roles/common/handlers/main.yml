@@ -15,3 +15,9 @@
 - name: Activate Swap
   command: swapon -L SWAP
   ignore_errors: yes
+
+- name: Restart chrony service
+  service: 
+    name: chronyd
+    state: restarted
+  
