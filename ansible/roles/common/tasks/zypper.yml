@@ -1,19 +1,8 @@
 - name: Install Additional Zypper Packages
   zypper:
     name: "{{ zypper_packages }}"
-    state: latest
+    state: present
 
 - zypper:
     name: ntp
     state: absent
-
-- name: Update all Zypper packages
-  zypper:
-    name: '*'
-    state: latest
-
-- name: Apply all Zypper patches
-  zypper:
-    name: '*'
-    state: latest
-    type: patch
