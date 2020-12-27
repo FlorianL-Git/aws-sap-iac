@@ -16,13 +16,17 @@
   filesystem:
     fstype: swap
     dev: "{{ device_swap.stdout }}"
-    opts: "-L SWAP"
     resizefs: no
+
+- name: Get Swap UUID
+  shell: blkid -s UUID -o value "{{ device_swap.stdout }}"
+  register: swap_uuid
+  changed_when: false
 
 - name: Add swap to /etc/fstab
   mount:
     path: "swap"
-    src: "LABEL=SWAP"
+    src: "UUID={{ swap_uuid.stdout }}"
     fstype: swap
     state: present
   notify: "Activate Swap"

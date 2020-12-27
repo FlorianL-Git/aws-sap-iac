@@ -44,7 +44,6 @@
   filesystem:
     fstype: xfs
     dev: "/dev/mapper/vghanadata-lvhanadata"
-    opts: "-L HANA_DATA"
     resizefs: no
 
 - name: Create /hana/data directory
@@ -53,10 +52,15 @@
     state: directory
     mode: '0755'
 
+- name: Get /hana/data UUID
+  shell: blkid -s UUID -o value /dev/mapper/vghanadata-lvhanadata
+  register: hana_data_uuid
+  changed_when: false
+
 - name: Mount File System
   mount:
     path: "/hana/data"
-    src: "LABEL=HANA_DATA"
+    src: "UUID={{ hana_data_uuid.stdout }}"
     fstype: xfs
     state: mounted
 
@@ -99,7 +103,6 @@
   filesystem:
     fstype: xfs
     dev: "/dev/mapper/vghanalog-lvhanalog"
-    opts: "-L HANA_LOG"
     resizefs: no
 
 - name: Create /hana/log directory
@@ -108,10 +111,15 @@
     state: directory
     mode: '0755'
 
+- name: Get /hana/log UUID
+  shell: blkid -s UUID -o value /dev/mapper/vghanalog-lvhanalog
+  register: hana_log_uuid
+  changed_when: false
+
 - name: Mount File System
   mount:
     path: "/hana/log"
-    src: "LABEL=HANA_LOG"
+    src: "UUID={{ hana_log_uuid.stdout }}"
     fstype: xfs
     state: mounted
 
@@ -131,7 +139,6 @@
   filesystem:
     fstype: xfs
     dev: "{{ device_usr_sap.stdout }}"
-    opts: "-L USR_SAP"
     resizefs: no
 
 - name: Create /usr/sap directory
@@ -140,10 +147,15 @@
     state: directory
     mode: '0755'
 
+- name: Get /usr/sap UUID
+  shell: blkid -s UUID -o value "{{ device_usr_sap.stdout }}"
+  register: usr_sap_uuid
+  changed_when: false
+
 - name: Mount File System
   mount:
     path: "/usr/sap"
-    src: "LABEL=USR_SAP"
+    src: "UUID={{ usr_sap_uuid.stdout }}"
     fstype: xfs
     state: mounted
 
@@ -164,7 +176,6 @@
   filesystem:
     fstype: xfs
     dev: "{{ device_hana_shared.stdout }}"
-    opts: "-L HANA_SHARED"
     resizefs: no
 
 - name: Create /hana/shared directory
@@ -173,10 +184,15 @@
     state: directory
     mode: '0755'
 
+- name: Get /hana/shared UUID
+  shell: blkid -s UUID -o value "{{ device_hana_shared.stdout }}"
+  register: hana_shared_uuid
+  changed_when: false
+
 - name: Mount File System
   mount:
     path: "/hana/shared"
-    src: "LABEL=HANA_SHARED"
+    src: "UUID={{ hana_shared_uuid.stdout }}"
     fstype: xfs
     state: mounted
 

@@ -16,7 +16,6 @@
   filesystem:
     fstype: xfs
     dev: "{{ device_usr_sap.stdout }}"
-    opts: "-L USR_SAP"
     resizefs: no
 
 - name: Create /usr/sap directory
@@ -25,10 +24,14 @@
     state: directory
     mode: '0755'
 
+- name: Get /usr/sap UUID
+  shell: blkid -s UUID -o value "{{ device_usr_sap.stdout }}"
+  register: usr_sap_uuid
+  changed_when: false
 
 - name: Mount File System
   mount:
     path: "/usr/sap"
-    src: "LABEL=USR_SAP"
+    src: "UUID={{ usr_sap_uuid.stdout }}"
     fstype: xfs
     state: mounted
