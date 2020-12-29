@@ -4,6 +4,7 @@ resource "aws_instance" "instance" {
   instance_type = var.instance_type
   key_name      = aws_key_pair.ssh.id
   iam_instance_profile  = aws_iam_instance_profile.instance_profile.id
+  user_data                   = file("${path.module}/scripts/init.sh")
   monitoring    = true
 
   tags = merge(
