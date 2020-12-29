@@ -4,3 +4,6 @@ zypper_packages:
   - nvme-cli
   - ntp
   - chrony
+  - libgcc_s1
+  - libstdc++6
+  - libatomic1
