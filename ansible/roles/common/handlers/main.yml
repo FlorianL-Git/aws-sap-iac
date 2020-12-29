@@ -12,8 +12,9 @@
   command: /tmp/aws-agent_install.sh
   listen: "Install AWS DataProvider"
 
+
 - name: Activate Swap
-  command: swapon -L SWAP
+  command: swapon -U "{{ swap_uuid.stdout }}"
   ignore_errors: yes
 
 - name: Restart chrony service
