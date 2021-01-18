@@ -7,6 +7,6 @@ locals {
     "sap-sid"   = var.sap_sid
     "sap-instance-type" = "ascs"
     "sap-instance-number" = var.sap_instance_number
-    "terraform-module"  = "systemshared"
+    "terraform-module"  = "ascs"
   }
 }
