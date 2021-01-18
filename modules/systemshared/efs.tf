@@ -24,6 +24,12 @@ resource "aws_efs_access_point" "sapmnt" {
   file_system_id = aws_efs_file_system.system.id
   root_directory {
     path = "/sapmnt/${var.sap_sid}"
+    
+    creation_info {
+      owner_uid = "0"
+      owner_gid = "0"
+      permissions = "0755"
+    }
   }
   tags = merge(
     local.common_tags,
@@ -37,6 +43,12 @@ resource "aws_efs_access_point" "transport" {
   file_system_id = aws_efs_file_system.system.id
   root_directory {
     path = "/usr/sap/trans"
+
+    creation_info {
+      owner_uid = "0"
+      owner_gid = "0"
+      permissions = "0755"
+    }
   }
   tags = merge(
     local.common_tags,
