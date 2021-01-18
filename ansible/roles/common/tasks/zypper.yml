@@ -3,6 +3,18 @@
     name: "{{ zypper_packages }}"
     state: present
 
-- zypper:
+- name: Remove ntp
+  zypper:
     name: ntp
     state: absent
+
+- name: Copy Amazon EFS Mount Helper
+  copy:
+    src: amazon-efs-utils-1.28.2-1.sles.noarch.rpm
+    dest: /tmp/amazon-efs-utils-1.28.2-1.sles.noarch.rpm
+
+- name: Install Amazon EFS Mount Helper
+  zypper:
+    name: /tmp/amazon-efs-utils-1.28.2-1.sles.noarch.rpm
+    state: present
+    disable_gpg_check: yes
