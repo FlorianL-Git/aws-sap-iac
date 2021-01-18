@@ -26,17 +26,17 @@
 
 - name: Mount /sapmnt
   mount:
-    src: "{{ system_efs.stdout }}.efs.{{ placement.region }}.amazonaws.com:/"
+    src: "{{ system_efs.stdout }}:/"
     path: /sapmnt
-    opts: "nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport"
+    opts: "tls,accesspoint={{ access_points | json_query('AccessPoints[?Name==`sapmnt_'+tags['sap-sid']+'`].AccessPointId') | first }}"
     state: mounted
-    fstype: nfs4
+    fstype: efs
 
 - name: Mount /usr/sap/trans
   mount:
-    src: "{{ system_efs.stdout }}.efs.{{ placement.region }}.amazonaws.com:/"
+    src: "{{ system_efs.stdout }}:/"
     path: /usr/sap/trans
-    opts: "nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport"
+    opts: "tls,accesspoint={{ access_points | json_query('AccessPoints[?Name==`transport_'+tags['sap-sid']+'`].AccessPointId') | first }}"
     state: mounted
-    fstype: nfs4
+    fstype: efs
 
