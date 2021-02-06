@@ -14,7 +14,7 @@ variable "domain_name" {
 }
 
 variable "ascs_instance_number" {
-  type        = string
+  type        = number
   description = "Instance Number of the SAP ASCS instance."
 }
 
