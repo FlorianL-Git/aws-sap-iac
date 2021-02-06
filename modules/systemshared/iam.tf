@@ -81,14 +81,6 @@ EOF
     }
   )
 }
-/*SHOULD NOT BE NEEDED
-resource "aws_iam_role_policy_attachment" "instance_profile_backup" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
-  role       = aws_iam_role.s4_role.name
-}
-*/
-
-
 
 resource "aws_iam_policy" "ansible" {
   name = "${var.sap_sid}-Ansible"
