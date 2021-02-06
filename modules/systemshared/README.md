@@ -2,16 +2,13 @@
 
 ## Requirements
 
-| Name | Version |
-|------|---------|
-| terraform | >= 0.14.2 |
-| aws | >= 3.21.0 |
+No requirements.
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 3.21.0 |
+| aws | n/a |
 
 ## Inputs
 
@@ -26,7 +23,7 @@
 | Name | Description |
 |------|-------------|
 | backup\_plan\_filesystems | n/a |
-| iam\_backup\_role\_id | n/a |
-| iam\_hanadb\_role\_id | n/a |
-| iam\_s4\_role\_id | n/a |
-| kms\_key\_arn | n/a |
+| iam\_backup\_role | n/a |
+| iam\_hanadb\_role | n/a |
+| iam\_s4\_role | n/a |
+| kms\_key | n/a |

@@ -2,16 +2,13 @@
 
 ## Requirements
 
-| Name | Version |
-|------|---------|
-| terraform | >= 0.14.2 |
-| aws | >= 3.21.0 |
+No requirements.
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 3.21.0 |
+| aws | n/a |
 
 ## Inputs
 
@@ -37,7 +34,7 @@
 | ssh\_public\_key | SSH Key for the EC2-Instance. | `string` | n/a | yes |
 | subnet\_id | Subnet ID to deploy the EC2 Instance. | `string` | n/a | yes |
 | swap\_size | Size of the swap filesystem. | `number` | `32` | no |
-| usrsap\_size | Size of the /usr/sap filesystem. | `number` | `15` | no |
+| usrsap\_size | Size of the /usr/sap filesystem. | `number` | `50` | no |
 
 ## Outputs
 
