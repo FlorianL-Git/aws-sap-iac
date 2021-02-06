@@ -8,5 +8,4 @@
 - include_tasks: zypper.yml
 - include_tasks: host_config.yml
 - include_tasks: swap.yml
-- include_tasks: AWSDataProvider.yml
 - include_tasks: ntp.yml
