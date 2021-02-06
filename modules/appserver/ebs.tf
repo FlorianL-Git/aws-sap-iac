@@ -8,7 +8,8 @@ resource "aws_ebs_volume" "usrsap" {
   tags = merge(
     local.common_tags,
     {
-      Name      = "${lower(var.sap_sid)}_${var.hostname}_usrsap"
+      Name      = "${lower(var.sap_sid)}_${var.hostname}_usrsap",
+      filesystem  = "usr_sap"
     }
   )
 }
@@ -29,7 +30,8 @@ resource "aws_ebs_volume" "swap" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${lower(var.sap_sid)}_${var.hostname}_swap"
+      Name = "${lower(var.sap_sid)}_${var.hostname}_swap",
+      filesystem  = "swap"
     }
   )
 }

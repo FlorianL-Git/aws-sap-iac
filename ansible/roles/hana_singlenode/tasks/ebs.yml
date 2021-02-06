@@ -1,0 +1,201 @@
+- name: Get attached Block Devices
+  shell: "aws ec2 describe-volumes --region={{ placement.region }} --filters Name=attachment.instance-id,Values={{ instance_id }}"
+  register: volumes
+  changed_when: false
+
+
+# /hana/data Filesystem
+
+- name: Set /hana/data Block Device Variable
+  set_fact:
+    ebs_hana_data: "{{ (volumes.stdout|from_json) | json_query(json_q) }}"
+  vars:
+    json_q: "Volumes[?Tags[?Key=='filesystem' && Value=='hana_data']]"
+
+
+
+- name: Get /hana/data Device
+  shell: "nvme list | awk '/{{ item.VolumeId | regex_replace(\"-\") }}/ {print $1}'"
+  register: devices_hana_data
+  changed_when: false
+  with_items: "{{ ebs_hana_data }}"
+  loop_control:
+    label: "{{ item.VolumeId }}"
+
+- name: Build /hana/data device List
+  set_fact:
+    device_list_hana_data: "{{ device_list_hana_data }} + [ '{{ item.stdout }}' ]"
+  with_items: "{{ devices_hana_data.results }}"
+  loop_control:
+    label: "{{ item.stdout }}"
+
+- name: Create /hana/data Volume Group
+  lvg:
+    vg: vghanadata
+    pvs: "{{ device_list_hana_data }}"
+
+- name: Create a logical volume for /hana/data
+  lvol:
+    vg: vghanadata
+    lv: lvhanadata
+    size: 100%PVS
+
+- name: Create a /hana/data as xfs filesystem
+  filesystem:
+    fstype: xfs
+    dev: "/dev/mapper/vghanadata-lvhanadata"
+    resizefs: no
+
+- name: Create /hana/data directory
+  file:
+    path: /hana/data
+    state: directory
+    mode: '0755'
+
+- name: Get /hana/data UUID
+  shell: blkid -s UUID -o value /dev/mapper/vghanadata-lvhanadata
+  register: hana_data_uuid
+  changed_when: false
+
+- name: Mount File System
+  mount:
+    path: "/hana/data"
+    src: "UUID={{ hana_data_uuid.stdout }}"
+    fstype: xfs
+    state: mounted
+
+
+# /hana/log Filesystem
+
+- name: Set /hana/log Block Device Variable
+  set_fact:
+    ebs_hana_log: "{{ (volumes.stdout|from_json) | json_query(json_q) }}"
+  vars:
+    json_q: "Volumes[?Tags[?Key=='filesystem' && Value=='hana_log']]"
+
+- name: Get /hana/log Device
+  shell: "nvme list | awk '/{{ item.VolumeId | regex_replace(\"-\") }}/ {print $1}'"
+  register: devices_hana_log
+  changed_when: false
+  with_items: "{{ ebs_hana_log }}"
+  loop_control:
+    label: "{{ item.VolumeId }}"
+
+- name: Build /hana/log device List
+  set_fact:
+    device_list_hana_log: "{{ device_list_hana_log }} + [ '{{ item.stdout }}' ]"
+  with_items: "{{ devices_hana_log.results }}"
+  loop_control:
+    label: "{{ item.stdout }}"
+
+- name: Create /hana/log Volume Group
+  lvg:
+    vg: vghanalog
+    pvs: "{{ device_list_hana_log }}"
+
+- name: Create a logical volume for /hana/log
+  lvol:
+    vg: vghanalog
+    lv: lvhanalog
+    size: 100%PVS
+
+- name: Create a /hana/log as xfs filesystem
+  filesystem:
+    fstype: xfs
+    dev: "/dev/mapper/vghanalog-lvhanalog"
+    resizefs: no
+
+- name: Create /hana/log directory
+  file:
+    path: /hana/log
+    state: directory
+    mode: '0755'
+
+- name: Get /hana/log UUID
+  shell: blkid -s UUID -o value /dev/mapper/vghanalog-lvhanalog
+  register: hana_log_uuid
+  changed_when: false
+
+- name: Mount File System
+  mount:
+    path: "/hana/log"
+    src: "UUID={{ hana_log_uuid.stdout }}"
+    fstype: xfs
+    state: mounted
+
+# /usr/sap Filesystem
+- name: Set /usr/sap Block Device Variable
+  set_fact:
+    ebs_usr_sap: "{{ (volumes.stdout|from_json) | json_query(json_q) }}"
+  vars:
+    json_q: "Volumes[?Tags[?Key=='filesystem' && Value=='usr_sap']]"
+
+- name: Get /usr/sap Device
+  shell: "nvme list | awk '/{{ ebs_usr_sap[0].VolumeId | regex_replace(\"-\") }}/ {print $1}'"
+  register: device_usr_sap
+  changed_when: false
+  
+- name: Create a /usr/sap as xfs filesystem
+  filesystem:
+    fstype: xfs
+    dev: "{{ device_usr_sap.stdout }}"
+    resizefs: no
+
+- name: Create /usr/sap directory
+  file:
+    path: /usr/sap
+    state: directory
+    mode: '0755'
+
+- name: Get /usr/sap UUID
+  shell: blkid -s UUID -o value "{{ device_usr_sap.stdout }}"
+  register: usr_sap_uuid
+  changed_when: false
+
+- name: Mount File System
+  mount:
+    path: "/usr/sap"
+    src: "UUID={{ usr_sap_uuid.stdout }}"
+    fstype: xfs
+    state: mounted
+
+# /hana/shared Filesystem
+
+- name: Set /hana/shared Block Device Variable
+  set_fact:
+    ebs_hana_shared: "{{ (volumes.stdout|from_json) | json_query(json_q) }}"
+  vars:
+    json_q: "Volumes[?Tags[?Key=='filesystem' && Value=='hana_shared']]"
+
+- name: Get /hana/shared Device
+  shell: "nvme list | awk '/{{ ebs_hana_shared[0].VolumeId | regex_replace(\"-\") }}/ {print $1}'"
+  register: device_hana_shared
+  changed_when: false
+  
+- name: Create a /hana/shared as xfs filesystem
+  filesystem:
+    fstype: xfs
+    dev: "{{ device_hana_shared.stdout }}"
+    resizefs: no
+
+- name: Create /hana/shared directory
+  file:
+    path: /hana/shared
+    state: directory
+    mode: '0755'
+
+- name: Get /hana/shared UUID
+  shell: blkid -s UUID -o value "{{ device_hana_shared.stdout }}"
+  register: hana_shared_uuid
+  changed_when: false
+
+- name: Mount File System
+  mount:
+    path: "/hana/shared"
+    src: "UUID={{ hana_shared_uuid.stdout }}"
+    fstype: xfs
+    state: mounted
+
+
+
+

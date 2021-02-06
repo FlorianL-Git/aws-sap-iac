@@ -1,0 +1,5 @@
+- name: Activate saptune solution
+  command: saptune solution apply S4HANA-DBSERVER
+  register: saptune
+  changed_when: "'already one solution applied' not in saptune.stdout"
+  notify: "Start saptune daemon"

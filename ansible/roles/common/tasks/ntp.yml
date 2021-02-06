@@ -1,0 +1,11 @@
+- name: Configure NTP Server
+  lineinfile:
+    path: /etc/chrony.conf
+    regexp: '^server'
+    line: "server 169.254.169.123 prefer iburst minpoll 4 maxpoll 4"
+  notify: "Restart chrony service"
+
+- name: Enable service chrony
+  service:
+    name: chronyd
+    enabled: yes

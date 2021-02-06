@@ -1,0 +1,8 @@
+- name: Download AWS DataProvider
+  get_url:
+    url: https://s3.amazonaws.com/aws-data-provider/bin/aws-agent_install.sh
+    dest: /tmp/aws-agent_install.sh
+  notify: "Install AWS DataProvider"
+
+
+

@@ -88,6 +88,40 @@ resource "aws_iam_role_policy_attachment" "instance_profile_backup" {
 }
 */
 
+
+
+resource "aws_iam_policy" "ansible" {
+  name = "${var.sap_sid}-Ansible"
+  description = "Policy for the Ansible Configuration"
+
+  policy = <<-EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "VisualEditor0",
+        "Effect": "Allow",
+        "Action": [
+          "EC2:DescribeInstances",
+          "EC2:DescribeVolumes",
+          "elasticfilesystem:DescribeAccessPoints",
+          "elasticfilesystem:DescribeFileSystems"
+        ],
+        "Resource": "*"
+      },
+      {
+        "Sid": "VisualEditor1",
+        "Effect": "Allow",
+        "Action": [
+          "kms:DescribeKey"
+        ],
+        "Resource": "${aws_kms_key.system.arn}"
+      }
+    ]
+  }   
+  EOF
+}
+
 resource "aws_iam_policy" "dataprovider" {
   name = "${var.sap_sid}-DataProviderPolicy"
   description = "Policy for the AWS Data Provider for SAP"
@@ -127,6 +161,16 @@ resource "aws_iam_role_policy_attachment" "dataprovider_s4" {
 resource "aws_iam_role_policy_attachment" "dataprovider_hanadb" {
   role       = aws_iam_role.hanadb_role.name
   policy_arn = aws_iam_policy.dataprovider.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ansible_s4" {
+  role       = aws_iam_role.s4_role.name
+  policy_arn = aws_iam_policy.ansible.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ansible_hanadb" {
+  role       = aws_iam_role.hanadb_role.name
+  policy_arn = aws_iam_policy.ansible.arn
 }
 
 

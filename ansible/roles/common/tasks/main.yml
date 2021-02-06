@@ -1,2 +1,12 @@
-- name: Example from an Ansible Playbook
-  ping:
+- name: "Wait if cloud-init is still running"
+  raw: test -f /var/lib/cloud/instance/boot-finished
+  retries: 30
+  register: cmd_res
+  changed_when: false
+  until: cmd_res is success
+
+- include_tasks: zypper.yml
+- include_tasks: host_config.yml
+- include_tasks: swap.yml
+- include_tasks: AWSDataProvider.yml
+- include_tasks: ntp.yml

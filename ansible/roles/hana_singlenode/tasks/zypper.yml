@@ -1,0 +1,4 @@
+- name: Install Additional HANA related Zypper Packages
+  zypper:
+    name: "{{ zypper_packages }}"
+    state: present
