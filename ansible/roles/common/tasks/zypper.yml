@@ -12,9 +12,40 @@
   copy:
     src: amazon-efs-utils-1.28.2-1.sles.noarch.rpm
     dest: /tmp/amazon-efs-utils-1.28.2-1.sles.noarch.rpm
+    owner: root
+    group: root
+    mode: '0700'
 
 - name: Install Amazon EFS Mount Helper
   zypper:
     name: /tmp/amazon-efs-utils-1.28.2-1.sles.noarch.rpm
+    state: present
+    disable_gpg_check: yes
+
+
+- name: Copy AWS Data Provider GPG Key
+  copy:
+    src: RPM-GPG-KEY-AWS
+    dest: /tmp/RPM-GPG-KEY-AWS
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Import AWS Data Provider GPG Key
+  rpm_key:
+    state: present
+    key: /tmp/RPM-GPG-KEY-AWS
+
+- name: Copy AWS Data Provider
+  copy:
+    src: aws-sap-dataprovider-sles.x86_64.rpm
+    dest: /tmp/aws-sap-dataprovider-sles.x86_64.rpm
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Install AWS Data Provider
+  zypper:
+    name: /tmp/aws-sap-dataprovider-sles.x86_64.rpm
     state: present
     disable_gpg_check: yes

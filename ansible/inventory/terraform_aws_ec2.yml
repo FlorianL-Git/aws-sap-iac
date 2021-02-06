@@ -14,7 +14,7 @@ keyed_groups:
     prefix: aws_instance_type
   - key: placement.region
     prefix: aws_region
-  - key: tags.sap_sid
+  - key: tags['sap-sid']
     prefix: sap_sid
 hostnames:
   - ip-address
