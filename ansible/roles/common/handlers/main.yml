@@ -1,18 +1,6 @@
 - name: Update netconfig
   command: netconfig update -f
 
-
-- name: Change AWS DataProvider permissions
-  file:
-    path: /tmp/aws-agent_install.sh
-    mode: ugo+x
-  listen: "Install AWS DataProvider"
-
-- name: Run Installation of AWS DataProvider
-  command: /tmp/aws-agent_install.sh
-  listen: "Install AWS DataProvider"
-
-
 - name: Activate Swap
   command: swapon -U "{{ swap_uuid.stdout }}"
   ignore_errors: yes
