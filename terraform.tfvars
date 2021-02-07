@@ -1,3 +1,4 @@
+aws_region = "eu-central-1"
 sap_sid = "FHC"
 vpc_id  = "vpc-009cbc51f7bb28df1"
 domain_name = "sap-fh.eu-central-1.aws.cloud.bmw"

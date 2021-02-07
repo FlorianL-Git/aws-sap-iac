@@ -1,3 +1,8 @@
+variable "aws_region" {
+  type        = string
+  description = "AWS Region in which the SAP System should be provisioned."
+}
+
 variable "sap_sid" {
   type        = string
   description = "SAP System identifier."
