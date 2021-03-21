@@ -49,7 +49,7 @@ variable "usrsap_size" {
 variable "swap_size" {
   type        = number
   description = "Size of the swap filesystem."
-  default        = 32
+  default        = 50
 }
 
 variable "instance_role" {
