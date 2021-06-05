@@ -2,7 +2,6 @@ zypper_packages:
   - saptune
   - nfs-utils
   - nvme-cli
-  - ntp
   - chrony
   - libgcc_s1
   - libstdc++6
