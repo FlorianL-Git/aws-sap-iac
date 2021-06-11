@@ -12,7 +12,7 @@ module "ascs" {
     domain_name = var.domain_name
     sap_sid = var.sap_sid
     sap_instance_number = var.ascs_instance_number
-    subnet_id = element(tolist(data.aws_subnet_ids.subnets.ids), 1)
+    subnet_id = element(tolist(data.aws_subnet_ids.subnets.ids), 0)
     ami           = var.ascs_ami
     instance_type = var.ascs_instance_type
     hostname      = var.ascs_hostname
@@ -28,7 +28,7 @@ module "appserver" {
     domain_name = var.domain_name
     sap_sid = var.sap_sid
     sap_instance_number = var.appserver_start_instance_number + count.index
-    subnet_id = element(tolist(data.aws_subnet_ids.subnets.ids), 1)
+    subnet_id = element(tolist(data.aws_subnet_ids.subnets.ids), 0)
     ami           = var.appserver_ami
     instance_type = var.appserver_instance_type
     hostname      = join("",[var.appserver_hostname_prefix, count.index])
@@ -43,7 +43,7 @@ module "hdb" {
     domain_name = var.domain_name
     sap_sid = var.sap_sid
     sap_instance_number = var.hdb_instance_number
-    subnet_id = element(tolist(data.aws_subnet_ids.subnets.ids), 1)
+    subnet_id = element(tolist(data.aws_subnet_ids.subnets.ids), 0)
     ami           = var.hdb_ami
     instance_type = var.hdb_instance_type
     hostname      = var.hdb_hostname

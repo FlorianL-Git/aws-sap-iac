@@ -15,4 +15,4 @@ hdb_instance_number     =   20
 hdb_ami                =   "ami-01b462b77531c0987"
 hdb_hostname           =   "tfhchdb20"
 hdb_instance_type      =   "r5.8xlarge"
-ssh_public_key  =   "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDjZD5PNfn/LDreoxfMcVEPxu13w9/Wbx/tvI/73NwKum1fIOZTtFmzsESsJ9JPP9xOCxjpRy5PSQwU/lmRsEOkPgSAORdTaggcdlgEI8o4JP+K+IZubaHb8VZDqyjy9Ul9wrmVC83jgMcUlg6zH3bAIlltX6KS0rDLCNa9IVBS5Ms9XYtzp60aqiHPVGrMvyjxxTIMdvjAET3F8EEpnnYyzTrOZVms5mE0EkusscLCG+HP3GeIJVC7c0KEMKEHH/a4usXIp+0WpInfZzb2Nu9I60VMkLa9v/VnqB2UBLDSXTcliiwMkg2jXtDfR9dqN4DCpR0LqY7ztMHuJGvJuuyf"
+ssh_public_key  =   "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/hI2iqGBOCP1GqNY9gRbmdmp8LS0gRHah9EwnNxtFKN3MleDWIgxbsogT/0lFITIN9ira5AgY4vcHf4CQq97FP++KPJHHwKjyjks/t2t5bDyoIqjIPCg19hUFLjH/Kf+3uS84rjzwidY4USAMv+cdw4TiC9kyHnSvXrebPNx9eVwewhF/w3Vlhp85mXPvrdjYghhUMCM269SfWqssydIJdAd5PeaXOE33MhryhF3X1Mj0sVweiNLfscpfBVsmSO4YGh2sLgmaM1y9GQRQOo3t7UdrMtfBwss37WU+hx/f5FfsQfW9oclcAIzBeXx7OrTISBg0Xh/9woIKXdV1RVaP"
